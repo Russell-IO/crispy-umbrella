@@ -20,3 +20,4 @@ echo "Generating shell file"
 echo '#!/bin/bash' > shell.sh
 echo "cd $PWD" >> shell.sh
 echo 'bundle exec ./main.rb $*' >> shell.sh
+chmod +x shell.sh
