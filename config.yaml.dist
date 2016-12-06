@@ -1,0 +1,5 @@
+---
+# Please edit to match your environments
+envs:
+  example-dev: { consul: 'http://consul.dev.example:8500' }
+  example-prd: { consul: 'http://consul.dev.example:8500' }
