@@ -11,7 +11,7 @@ config = YAML.load_file(config_path)
 
 cli = HighLine.new
 
-def consulConfigureEnvironment(uri)
+def consulConfigureEcosystem(uri)
   Diplomat.configure do |config|
     config.url = uri
   end
@@ -39,20 +39,20 @@ def sshToRemoteServer(node_address)
 end
 
 unless ARGV[0] == nil
-  env = ARGV[0]
+  ecosystem = ARGV[0]
 else
   # ask user to choose and env to conncet to
-  envs = config['envs'].keys
-  puts 'Please select an env to connect to'
-  env = cli.choose do |menu|
-    menu.choices(*envs)
-    menu.prompt = 'Please select an env to connect to'
+  ecosystems = config['ecosystems'].keys
+  puts 'Please select an ecosystem to connect to'
+  ecosystem = cli.choose do |menu|
+    menu.choices(*ecosystems)
+    menu.prompt = 'Please select an ecosystem to connect to'
   end
 end
 
 # Configure consul to connect
-consul = config['envs'][env]['consul']
-consulConfigureEnvironment(consul)
+consul = config['ecosystems'][ecosystem]['consul']
+consulConfigureEcosystem(consul)
 
 unless ARGV[1] == nil
   dc = ARGV[1]
@@ -66,44 +66,13 @@ else
   end
 end
 
-# Retrieve a flat array of services
-#services = Array.new
-#raw_services = getConsulServices(dc)
-#raw_services.each do |s|
-#  s[1].each do |s2|
-#    services.push(s2)
-#  end
-#end
-
-# Ask the user which Service they would like to connect to
-#puts 'Please select a service to connect to'
-#service = cli.choose do |menu|
-#  menu.prompt = 'Please select a service to connect to'
-#  menu.choice('All')
-#  menu.choices(*services)
-#end
-
-#override hack
-service = 'All'
-
-unless service == 'All'
-  nodes = getConsulServiceNodes(dc,service)
-  # Ask the user which node they would like to connect to
-  puts 'Please select a node to connect to'
-  node = cli.choose do |menu|
-    menu.prompt = 'Please select a node to connect to'
-    menu.choice('All')
-    menu.choices(*nodes.keys)
-  end
-else
-  nodes = getConsulServiceNodes(dc,'puppet')
-  # Ask the user which node they would like to connect to
-  puts 'Please select a node to connect to'
-  node = cli.choose do |menu|
-    menu.prompt = 'Please select a node to connect to'
-    #menu.choice('All')
-    menu.choices(*nodes.keys)
-  end
+nodes = getConsulServiceNodes(dc,'puppet')
+# Ask the user which node they would like to connect to
+puts 'Please select a node to connect to'
+node = cli.choose do |menu|
+  menu.prompt = 'Please select a node to connect to'
+  #menu.choice('All')
+  menu.choices(*nodes.keys)
 end
 
 unless node == 'All'
